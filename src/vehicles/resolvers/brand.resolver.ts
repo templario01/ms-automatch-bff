@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { Info, Query } from '@nestjs/graphql';
-import { Brand } from '../graphql/brand.entity';
+import { Brand } from '../graphql-types/brand.entity';
 import { CacheControl } from '../../common/decorators/cahche-control';
 
 @Injectable()
