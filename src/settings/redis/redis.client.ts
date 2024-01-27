@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EnvConfigService } from '../config/env-config.service';
 import * as Keyv from 'keyv';
 import { KeyvAdapter } from '@apollo/utils.keyvadapter';
+import KeyvGzip from '@keyv/compress-gzip';
 
 @Injectable()
 export class RedisClient {
@@ -16,9 +17,9 @@ export class RedisClient {
   public init() {
     try {
       const { host, password, port } = this.envConfig.redis;
-      const keyv = new Keyv(`redis://:${password}@${host}:${port}/0`, {
-        ttl: 60,
-        namespace: 'automatch',
+      const keyv = new Keyv(`redis://:${password}@${host}:${port}`, {
+        namespace: 'GraphqlCache',
+        compresion: KeyvGzip,
       });
       this.keyvAdapter = new KeyvAdapter(keyv);
     } catch (error) {

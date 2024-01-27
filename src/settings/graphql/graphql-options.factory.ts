@@ -16,8 +16,7 @@ export function generateCustomCacheKey(
   requestContext: GraphQLRequestContext<Record<string, any>>,
   keyData: unknown,
 ): string {
-  const operationName = requestContext.request.operationName || 'unnamed';
-  return `${operationName}:${sha256(JSON.stringify(keyData))}`;
+  return `${sha256(JSON.stringify(keyData))}`;
 }
 
 function sha256(text: string) {
