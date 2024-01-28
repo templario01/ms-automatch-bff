@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { Info, Query } from '@nestjs/graphql';
+import { Args, Info, Query } from '@nestjs/graphql';
 import { VehicleBrand } from '../graphql-types/entities/vehicle-brand.entity';
 import { CacheControl } from '../../common/decorators/cahche-control';
 import { Observable } from 'rxjs';
@@ -11,7 +11,10 @@ export class VehicleBrandResolver {
   constructor(private readonly vehicleBrandService: VehicleBrandService) {}
   @Query(() => [VehicleBrand])
   @CacheControl('PUBLIC', 300)
-  getBrands(@Info() _info: ParameterDecorator): Observable<VehicleBrand[]> {
-    return this.vehicleBrandService.getBrands();
+  getBrands(
+    @Info() _info: ParameterDecorator,
+    @Args('word') word: string,
+  ): Observable<VehicleBrand[]> {
+    return this.vehicleBrandService.getBrands(word);
   }
 }

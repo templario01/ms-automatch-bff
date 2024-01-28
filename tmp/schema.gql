@@ -13,5 +13,5 @@ type VehicleBrand {
 }
 
 type Query {
-  getBrands: [VehicleBrand!]!
+  getBrands(word: String!): [VehicleBrand!]!
 }

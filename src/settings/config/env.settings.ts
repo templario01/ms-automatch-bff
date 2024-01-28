@@ -6,6 +6,7 @@ export interface EnvSettings {
   readonly REDIS_HOST: Joi.StringSchema<string>;
   readonly REDIS_PASSWORD: Joi.StringSchema<string>;
   readonly REDIS_PORT: Joi.NumberSchema<number>;
+  readonly INVENTORY_API_URL: Joi.StringSchema<string>;
 }
 
 export const envSettings: EnvSettings = {
@@ -14,4 +15,5 @@ export const envSettings: EnvSettings = {
   REDIS_HOST: Joi.string().required(),
   REDIS_PASSWORD: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
+  INVENTORY_API_URL: Joi.string().required(),
 };

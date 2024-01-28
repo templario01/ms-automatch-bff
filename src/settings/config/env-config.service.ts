@@ -18,4 +18,9 @@ export class EnvConfigService {
       port: this.configService.get<number>('REDIS_PORT'),
     };
   }
+  get inventory() {
+    return {
+      url: this.configService.get<string>('INVENTORY_API_URL'),
+    };
+  }
 }

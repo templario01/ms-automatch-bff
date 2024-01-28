@@ -1,19 +1,21 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
-import { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import { Injectable, Logger } from '@nestjs/common';
+import { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 import {
   HttpRequestConfig,
   HttpRequestConfigGet,
 } from './types/automatch-http.types';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
+import { ApiErrorException } from '../exceptions/api-error.exception';
 
 @Injectable()
 export class AutomatchHttpService {
+  private readonly logger = new Logger(AutomatchHttpService.name);
   constructor(private readonly httpService: HttpService) {}
 
   public get<T>(
     url: string,
-    config: HttpRequestConfigGet,
+    config?: HttpRequestConfigGet,
   ): Observable<AxiosResponse<T>> {
     const method: Method = 'GET';
     return this.request<T>({ ...config, method, url });
@@ -46,6 +48,12 @@ export class AutomatchHttpService {
   private request<T>(
     requestConfig: AxiosRequestConfig,
   ): Observable<AxiosResponse<T>> {
-    return this.httpService.request(requestConfig);
+    return this.httpService.request(requestConfig).pipe(
+      catchError((error: AxiosError<any>) => {
+        const response = error.response.data;
+        this.logger.error('Request to external API failed', response);
+        throw new ApiErrorException(response?.message);
+      }),
+    );
   }
 }
