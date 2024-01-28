@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { Brands } from './resolvers/brand.resolver';
+import { VehicleBrandService } from './services/brand.service';
+import { VehicleBrandResolver } from './resolvers/brand.resolver';
+import { AutomatchHttpModule } from '../common/http/automatch-http.module';
 
 @Module({
-  imports: [],
-  providers: [Brands],
+  imports: [AutomatchHttpModule],
+  providers: [VehicleBrandService, VehicleBrandResolver],
 })
 export class VehiclesModule {}

@@ -62,9 +62,7 @@ export class GraphqlOptions implements GqlOptionsFactory {
       context: (context) => context,
       plugins: [
         this.apolloExplorerSandboxPlugin,
-        ApolloServerPluginCacheControl({
-          defaultMaxAge: 0,
-        }),
+        this.apolloCacheControlPlugin,
         cacheControlPlugin,
         responseCachePlugin({
           sessionId: (requestContext) => {
@@ -78,12 +76,18 @@ export class GraphqlOptions implements GqlOptionsFactory {
     };
   }
 
-  get apolloExplorerSandboxPlugin(): ApolloServerPlugin {
+  private get apolloExplorerSandboxPlugin(): ApolloServerPlugin {
     if (this.environment === 'production') {
       return ApolloServerPluginLandingPageProductionDefault({
         footer: false,
       });
     }
     return ApolloServerPluginLandingPageLocalDefault({ footer: false });
+  }
+
+  private get apolloCacheControlPlugin(): ApolloServerPlugin {
+    return ApolloServerPluginCacheControl({
+      defaultMaxAge: 0,
+    });
   }
 }

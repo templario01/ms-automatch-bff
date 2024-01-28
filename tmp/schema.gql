@@ -2,10 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Brand {
+type VehicleModel {
   name: String!
 }
 
+type VehicleBrand {
+  id: ID!
+  name: String!
+  models: [VehicleModel!]!
+}
+
 type Query {
-  getBrands: Brand!
+  getBrands: [VehicleBrand!]!
 }
