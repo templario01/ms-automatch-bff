@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: automatch
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: automatch-bff-configmap
+  namespace: automatch
+data:
+  NODE_ENV: "staging"
+  PORT: "3020"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: automatch-inventory-bs-deploy
+  namespace: automatch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-automatch-inventory-bs
+  template:
+    metadata:
+      labels:
+        app: ms-automatch-inventory-bs
+    spec:
+      containers:
+        - name: <name>
+          image: <aws-erc-name>
+          imagePullPolicy: Always
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: automatch-inventory-bs-configmap
+                  key: NODE_ENV
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: automatch-inventory-bs-configmap
+                  key: PORT
+          ports:
+            - containerPort: 8030
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi" # max RAM = 512 Mb
+              cpu: "300m" # max CPU-Cores = 0.3 GB
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: automatch-inventory-bs-svc
+  namespace: automatch
+spec:
+  selector:
+    app: ms-automatch-inventory-bs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
+---
+

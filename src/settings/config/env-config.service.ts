@@ -13,9 +13,7 @@ export class EnvConfigService {
   }
   get redis() {
     return {
-      host: this.configService.get<string>('REDIS_HOST'),
-      password: this.configService.get<string>('REDIS_PASSWORD'),
-      port: this.configService.get<number>('REDIS_PORT'),
+      url: this.configService.get<string>('REDIS_URL'),
     };
   }
   get inventory() {

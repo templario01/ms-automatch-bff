@@ -16,8 +16,8 @@ export class RedisClient {
 
   public init() {
     try {
-      const { host, password, port } = this.envConfig.redis;
-      const keyv = new Keyv(`redis://:${password}@${host}:${port}`, {
+      const { url } = this.envConfig.redis;
+      const keyv = new Keyv(url, {
         compresion: KeyvGzip,
       });
       this.keyvAdapter = new KeyvAdapter(keyv);
