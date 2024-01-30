@@ -18,7 +18,6 @@ export class RedisClient {
     try {
       const { host, password, port } = this.envConfig.redis;
       const keyv = new Keyv(`redis://:${password}@${host}:${port}`, {
-        namespace: 'GraphqlCache',
         compresion: KeyvGzip,
       });
       this.keyvAdapter = new KeyvAdapter(keyv);

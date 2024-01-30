@@ -12,30 +12,6 @@ import { ApolloServerPluginCacheControl } from '@apollo/server/plugin/cacheContr
 import responseCachePlugin from '@apollo/server-plugin-response-cache';
 import { createHash } from 'crypto';
 
-export function generateCustomCacheKey(
-  requestContext: GraphQLRequestContext<Record<string, any>>,
-  keyData: unknown,
-): string {
-  return `${sha256(JSON.stringify(keyData))}`;
-}
-
-function sha256(text: string) {
-  return createHash('sha256').update(text).digest('hex');
-}
-
-export const cacheControlPlugin = {
-  async requestDidStart() {
-    return {
-      async willSendResponse({ response }) {
-        const controlHeader = response.http.headers.get('Cache-Control');
-        if (!controlHeader) {
-          response.http.headers.set('Cache-Control', 'max-age=0, private');
-        }
-      },
-    };
-  },
-};
-
 @Injectable()
 export class GraphqlOptions implements GqlOptionsFactory {
   private readonly environment: string;
@@ -60,20 +36,17 @@ export class GraphqlOptions implements GqlOptionsFactory {
         ttl: 60,
       },
       context: (context) => context,
-      plugins: [
-        this.apolloExplorerSandboxPlugin,
-        this.apolloCacheControlPlugin,
-        cacheControlPlugin,
-        responseCachePlugin({
-          sessionId: (requestContext) => {
-            return Promise.resolve(
-              requestContext.request.http.headers.get('authorization') || null,
-            );
-          },
-          generateCacheKey: generateCustomCacheKey,
-        }),
-      ],
+      plugins: [...this.apolloGqlPlugins],
     };
+  }
+
+  private get apolloGqlPlugins(): ApolloServerPlugin[] {
+    return [
+      this.apolloExplorerSandboxPlugin,
+      this.apolloCacheControlMaxAgePlugin,
+      this.apolloCacheControlPlugin,
+      this.apolloResponseCachePlugin,
+    ];
   }
 
   private get apolloExplorerSandboxPlugin(): ApolloServerPlugin {
@@ -85,9 +58,43 @@ export class GraphqlOptions implements GqlOptionsFactory {
     return ApolloServerPluginLandingPageLocalDefault({ footer: false });
   }
 
-  private get apolloCacheControlPlugin(): ApolloServerPlugin {
+  private get apolloCacheControlMaxAgePlugin(): ApolloServerPlugin {
     return ApolloServerPluginCacheControl({
       defaultMaxAge: 0,
+    });
+  }
+
+  private get apolloCacheControlPlugin(): ApolloServerPlugin {
+    return {
+      async requestDidStart() {
+        return {
+          async willSendResponse({ response }) {
+            const controlHeader = response.http.headers.get('Cache-Control');
+            if (!controlHeader) {
+              response.http.headers.set('Cache-Control', 'max-age=0, private');
+            }
+          },
+        };
+      },
+    };
+  }
+
+  private generateRedisCustomCacheKey(
+    _requestContext: GraphQLRequestContext<Record<string, any>>,
+    keyData: unknown,
+  ) {
+    const hash = createHash('sha256')
+      .update(JSON.stringify(keyData))
+      .digest('hex');
+    return hash;
+  }
+
+  private get apolloResponseCachePlugin(): ApolloServerPlugin {
+    return responseCachePlugin({
+      sessionId: async ({ request }) => {
+        return request.http.headers.get('authorization') || null;
+      },
+      generateCacheKey: this.generateRedisCustomCacheKey,
     });
   }
 }

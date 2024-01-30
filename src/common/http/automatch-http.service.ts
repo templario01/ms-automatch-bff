@@ -50,7 +50,7 @@ export class AutomatchHttpService {
   ): Observable<AxiosResponse<T>> {
     return this.httpService.request(requestConfig).pipe(
       catchError((error: AxiosError<any>) => {
-        const response = error.response.data;
+        const response = error?.response?.data;
         this.logger.error('Request to external API failed', response);
         throw new ApiErrorException(response?.message);
       }),
