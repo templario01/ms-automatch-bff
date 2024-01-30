@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: ms-automatch-bff
-          image: 020503494232.dkr.ecr.us-east-1.amazonaws.com/ms-automatch-bff
+          image: 020503494232.dkr.ecr.us-east-1.amazonaws.com/ms-automatch-bff:1.1
           imagePullPolicy: Always
           env:
             - name: NODE_ENV
