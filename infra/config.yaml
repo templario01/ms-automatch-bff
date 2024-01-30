@@ -50,6 +50,11 @@ spec:
                 configMapKeyRef:
                   name: automatch-bff-configmap
                   key: INVENTORY_API_URL
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: automatch-bff-secrets
+                  key: REDIS_URL
           ports:
             - containerPort: 3020
           resources:
