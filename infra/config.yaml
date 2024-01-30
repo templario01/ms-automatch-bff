@@ -12,40 +12,46 @@ metadata:
 data:
   NODE_ENV: "staging"
   PORT: "3020"
+  INVENTORY_API_URL: "http://automatch-inventory-bs-svc"
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: automatch-inventory-bs-deploy
+  name: automatch-bff-deploy
   namespace: automatch
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ms-automatch-inventory-bs
+      app: ms-automatch-bff
   template:
     metadata:
       labels:
-        app: ms-automatch-inventory-bs
+        app: ms-automatch-bff
     spec:
       containers:
-        - name: <name>
-          image: <aws-erc-name>
+        - name: ms-automatch-bff
+          image: 020503494232.dkr.ecr.us-east-1.amazonaws.com/ms-automatch-bff
           imagePullPolicy: Always
           env:
             - name: NODE_ENV
               valueFrom:
                 configMapKeyRef:
-                  name: automatch-inventory-bs-configmap
+                  name: automatch-bff-configmap
                   key: NODE_ENV
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                  name: automatch-inventory-bs-configmap
+                  name: automatch-bff-configmap
                   key: PORT
+            - name: INVENTORY_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: automatch-bff-configmap
+                  key: INVENTORY_API_URL
           ports:
-            - containerPort: 8030
+            - containerPort: 3020
           resources:
             requests:
               memory: "128Mi"
@@ -58,15 +64,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: automatch-inventory-bs-svc
+  name: automatch-bff-svc
   namespace: automatch
 spec:
   selector:
-    app: ms-automatch-inventory-bs
+    app: ms-automatch-bff
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 3020
   type: ClusterIP #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
----
 
