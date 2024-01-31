@@ -78,5 +78,6 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 3020
-  type: ClusterIP #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
+  type: NodePort #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
+  
 
