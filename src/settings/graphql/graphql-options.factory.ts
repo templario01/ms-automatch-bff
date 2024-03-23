@@ -23,7 +23,6 @@ export class GraphqlOptions implements GqlOptionsFactory {
   }
 
   createGqlOptions(): Promise<ApolloDriverConfig> | ApolloDriverConfig {
-    this.redisClient.init();
     return {
       driver: ApolloDriver,
       cache: this.redisClient.adapter,

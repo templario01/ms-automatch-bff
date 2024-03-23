@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AutomatchHttpService } from '../../common/http/automatch-http.service';
 import { Observable, map } from 'rxjs';
-import { VehicleBrand } from '../graphql-types/entities/vehicle-brand.entity';
+import { VehicleBrandEntity } from '../graphql-types/entities/vehicle-brand.entity';
 import { BrandDto } from '../dtos/brand.dto';
 import { EnvConfigService } from '../../settings/config/env-config.service';
 
@@ -15,15 +15,13 @@ export class VehicleBrandService {
     this.apiUrl = this.envConfigService.inventory.url;
   }
 
-  getBrands(word: string): Observable<VehicleBrand[]> {
-    const route = '/brands/search';
-    const url = `${this.apiUrl}${route}`;
+  public getBrands(word: string): Observable<VehicleBrandEntity[]> {
+    const url = `${this.apiUrl}/brands/search`;
     const params: Record<string, string> = {
       word,
     };
-
     return this.httpService
       .get<BrandDto[]>(url, { params })
-      .pipe(map((response) => VehicleBrand.mapToEntities(response.data)));
+      .pipe(map(({ data }) => VehicleBrandEntity.mapToEntities(data)));
   }
 }

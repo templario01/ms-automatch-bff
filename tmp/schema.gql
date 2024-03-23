@@ -6,12 +6,84 @@ type VehicleModel {
   name: String!
 }
 
-type VehicleBrand {
+type VehicleBrandEntity {
   id: ID!
   name: String!
   models: [VehicleModel!]!
 }
 
+type VehicleEntity {
+  id: String!
+  externalId: String!
+  url: String!
+  name: String!
+  description: String
+  year: Float!
+  transmission: String
+  mileage: Float!
+  frontImage: String
+  images: String
+  location: String!
+  condition: VehicleCondition!
+  originalPrice: Float!
+  price: Float!
+  currency: PriceCurrency!
+  createdAt: DateTime
+  updatedAt: DateTime
+  websiteId: String!
+  status: InventoryStatus!
+}
+
+"""vehicle condition"""
+enum VehicleCondition {
+  NEW
+  USED
+}
+
+"""Original price(s) of vehicle publication"""
+enum PriceCurrency {
+  USD
+  PEN
+  USDPEN
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Inventory current status"""
+enum InventoryStatus {
+  ACTIVE
+  INACTIVE
+}
+
+type VehicleEdgeEntity {
+  cursor: String!
+  node: VehicleEntity!
+}
+
+type PaginatedVehiclesEntity {
+  edges: [VehicleEdgeEntity!]!
+  nodes: [VehicleEntity!]!
+  totalCount: Float!
+  hasNextPage: Boolean!
+  endCursor: String
+}
+
 type Query {
-  getBrands(word: String!): [VehicleBrand!]!
+  getBrands(word: String!): [VehicleBrandEntity!]!
+  getVehiclesByFilters(searchVehiclesInput: SearchVehiclesInput!): PaginatedVehiclesEntity!
+}
+
+input SearchVehiclesInput {
+  take: Float = 36
+  after: String
+  brand: String!
+  model: String!
+  location: String!
+  minPrice: Float
+  maxPrice: Float
+  year: Float!
+  condition: VehicleCondition
 }

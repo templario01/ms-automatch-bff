@@ -5,7 +5,7 @@ import {
   HttpRequestConfig,
   HttpRequestConfigGet,
 } from './types/automatch-http.types';
-import { Observable, catchError } from 'rxjs';
+import { Observable, catchError, tap } from 'rxjs';
 import { ApiErrorException } from '../exceptions/api-error.exception';
 
 @Injectable()
@@ -49,6 +49,11 @@ export class AutomatchHttpService {
     requestConfig: AxiosRequestConfig,
   ): Observable<AxiosResponse<T>> {
     return this.httpService.request(requestConfig).pipe(
+      tap((response) => {
+        if (!response.data) {
+          throw new Error('data response empty');
+        }
+      }),
       catchError((error: AxiosError<any>) => {
         const response = error?.response?.data;
         this.logger.error('Request to external API failed', response);

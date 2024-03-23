@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -12,12 +12,22 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
+
   const port = app.get(ConfigService).get<number>('PORT');
   const logger = new Logger('Bootstrap');
 
-  await app.listen(port, (_err, address) => {
+  await app.listen(port, () => {
     logger.log(`Server running on port: ${port} 🚀 ✨✨`);
-    logger.log(`GraphQL Apollo Explorer: ${address}/graphql`);
   });
 }
 bootstrap();
