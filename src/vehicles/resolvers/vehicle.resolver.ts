@@ -11,7 +11,7 @@ export class VehicleResolver {
   constructor(private readonly vehicleService: VehicleService) {}
 
   @Query(() => PaginatedVehiclesEntity)
-  @CacheControl('PUBLIC', 300)
+  @CacheControl('PUBLIC', '5m')
   getVehiclesByFilters(
     @Info() _info: ParameterDecorator,
     @Args('searchVehiclesInput') searchVehiclesInput: SearchVehiclesInput,

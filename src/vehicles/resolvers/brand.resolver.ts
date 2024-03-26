@@ -8,7 +8,7 @@ import { VehicleBrandService } from '../services/brand.service';
 export class VehicleBrandResolver {
   constructor(private readonly vehicleBrandService: VehicleBrandService) {}
   @Query(() => [VehicleBrandEntity])
-  @CacheControl('PUBLIC', 300)
+  @CacheControl('PUBLIC', '10m')
   getBrands(
     @Info() _info: ParameterDecorator,
     @Args('word') word: string,

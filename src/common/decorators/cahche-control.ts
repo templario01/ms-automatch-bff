@@ -1,4 +1,5 @@
 export type CacheScope = 'PUBLIC' | 'PRIVATE';
+export type MaxAgeInMinutes = '0m' | '1m' | '3m' | '5m' | '8m' | '10m' | '15m';
 
 const returnResolveInfo = (args: Array<any>): any =>
   args.find(
@@ -8,16 +9,20 @@ const returnResolveInfo = (args: Array<any>): any =>
       Object.hasOwnProperty.bind(value)('cacheControl'),
   );
 
+const convertStrMinToSec = (minutes: MaxAgeInMinutes): number => {
+  const mins = parseInt(minutes.slice(0, -1));
+  return mins * 60;
+};
+
 /**
- * CacheControl - Function to generate the Cache-Control response header.
+ * CacheControl Decorator - Function to generate Cache-Control response header.
  *
  * @param {string} scope - The scope of the cache. It can be 'PUBLIC' or 'PRIVATE'. Defaults to 'PRIVATE'.
- * @param {number} maxAge - The maximum time clients can cache the response, in seconds. Defaults to 0.
- * @returns {Function} - The same method with cacheControl
+ * @param {string} maxAge - The maximum time clients can cache the response, in minutes. Defaults 0 minutes.
  */
 export const CacheControl = (
   scope: CacheScope = 'PRIVATE',
-  maxAge = 0,
+  maxAge: MaxAgeInMinutes = '0m',
 ): MethodDecorator => {
   return (
     _target: any,
@@ -32,7 +37,7 @@ export const CacheControl = (
         return originalMethod.apply(this, args);
       }
       info.cacheControl.setCacheHint({
-        maxAge,
+        maxAge: convertStrMinToSec(maxAge),
         scope,
       });
 
