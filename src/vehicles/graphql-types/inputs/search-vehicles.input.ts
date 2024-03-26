@@ -24,7 +24,7 @@ export class SearchVehiclesInput extends CursorPaginatorInput {
   @IsNotEmpty()
   readonly model?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
@@ -42,7 +42,7 @@ export class SearchVehiclesInput extends CursorPaginatorInput {
   @Min(0)
   readonly maxPrice?: number;
 
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
   @IsNumber()
   @Min(0)
