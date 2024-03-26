@@ -51,12 +51,12 @@ export class AutomatchHttpService {
     return this.httpService.request(requestConfig).pipe(
       tap((response) => {
         if (!response.data) {
-          throw new Error('data response empty');
+          throw new ApiErrorException('data response empty');
         }
       }),
       catchError((error: AxiosError<any>) => {
         const response = error?.response?.data;
-        this.logger.error('Request to external API failed', response);
+        this.logger.error('Request to external API failed', error);
         throw new ApiErrorException(response?.message);
       }),
     );

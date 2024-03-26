@@ -4,7 +4,7 @@
 
 FROM node:20-alpine3.17 AS development
 
-ENV PORT 3000
+ENV PORT 3020
 WORKDIR /usr/src/app
 COPY --chown=node:node package*.json ./
 RUN npm ci
@@ -36,5 +36,4 @@ FROM node:20-alpine3.17 AS production
 
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-ENV PORT 3020
 CMD [ "node", "dist/main.js" ]

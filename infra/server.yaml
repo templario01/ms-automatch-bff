@@ -1,8 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: automatch
-
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -10,9 +5,10 @@ metadata:
   name: automatch-bff-configmap
   namespace: automatch
 data:
-  NODE_ENV: "staging"
+  NODE_ENV: "qa"
   PORT: "3020"
-  INVENTORY_API_URL: "http://automatch-inventory-bs-svc"
+  INVENTORY_API_URL: "http://automatch-inventory-bs-svc/v1"
+  REDIS_URL: "rediss://:6357ed466025411d8cceb0d5d6b6c786@us1-perfect-hyena-42231.upstash.io:42231"
 
 ---
 apiVersion: apps/v1
@@ -30,9 +26,10 @@ spec:
       labels:
         app: ms-automatch-bff
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: ms-automatch-bff
-          image: 020503494232.dkr.ecr.us-east-1.amazonaws.com/ms-automatch-bff:1.1
+          image: victor0141/ms-automatch-bff:1.3
           imagePullPolicy: Always
           env:
             - name: NODE_ENV
@@ -52,8 +49,8 @@ spec:
                   key: INVENTORY_API_URL
             - name: REDIS_URL
               valueFrom:
-                secretKeyRef:
-                  name: automatch-bff-secrets
+                configMapKeyRef:
+                  name: automatch-bff-configmap
                   key: REDIS_URL
           ports:
             - containerPort: 3020
@@ -62,8 +59,8 @@ spec:
               memory: "128Mi"
               cpu: "100m"
             limits:
-              memory: "512Mi" # max RAM = 512 Mb
-              cpu: "300m" # max CPU-Cores = 0.3 GB
+              memory: "512Mi"
+              cpu: "500m"
 
 ---
 apiVersion: v1
@@ -75,9 +72,30 @@ spec:
   selector:
     app: ms-automatch-bff
   ports:
-    - protocol: TCP
-      port: 80
+    - port: 80
       targetPort: 3020
+      protocol: TCP
   type: ClusterIP #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-control
+  namespace: automatch
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "automatch-bff-svc"
+                port:
+                  number: 80
+
   
 
