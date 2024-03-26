@@ -29,7 +29,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ms-automatch-bff
-          image: victor0141/ms-automatch-bff:1.3
+          image: victor0141/ms-automatch-bff:1.4
           imagePullPolicy: Always
           env:
             - name: NODE_ENV
