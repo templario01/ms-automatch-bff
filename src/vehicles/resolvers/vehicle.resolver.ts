@@ -15,7 +15,7 @@ export class VehicleResolver {
   getVehiclesByFilters(
     @Info() _info: ParameterDecorator,
     @Args('searchVehiclesInput') searchVehiclesInput: SearchVehiclesInput,
-  ): Observable<any> {
+  ): Observable<PaginatedVehiclesEntity> {
     return this.vehicleService.findVehicles(searchVehiclesInput);
   }
 }
