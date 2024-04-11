@@ -56,7 +56,7 @@ export class AutomatchHttpService {
       }),
       catchError((error: AxiosError<any>) => {
         const response = error?.response?.data;
-        this.logger.error('Request to external API failed', error);
+        this.logger.error('Request to external API failed', response);
         throw new ApiErrorException(response?.message);
       }),
     );

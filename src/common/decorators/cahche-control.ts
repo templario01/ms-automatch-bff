@@ -1,5 +1,18 @@
 export type CacheScope = 'PUBLIC' | 'PRIVATE';
-export type MaxAgeInMinutes = '0m' | '1m' | '3m' | '5m' | '8m' | '10m' | '15m';
+
+export enum MaxAge {
+  NO_MAX_AGE = '0m',
+  ONE_MINUTE = '1m',
+  THREE_MINUTES = '3m',
+  FIVE_MINUTES = '5m',
+  EIGHT_MINUTES = '8m',
+  TEN_MINUTES = '10m',
+  FIFTEEN_MINUTES = '15m',
+  ONE_DAY = '10080m',
+  FIVE_DAYS = '7200m',
+  TEN_DAYS = '14400m',
+  FIFTEEN_DAYS = '21600m',
+}
 
 const returnResolveInfo = (args: Array<any>): any =>
   args.find(
@@ -9,7 +22,7 @@ const returnResolveInfo = (args: Array<any>): any =>
       Object.hasOwnProperty.bind(value)('cacheControl'),
   );
 
-const convertStrMinToSec = (minutes: MaxAgeInMinutes): number => {
+const convertStrMinToSec = (minutes: MaxAge): number => {
   const mins = parseInt(minutes.slice(0, -1));
   return mins * 60;
 };
@@ -22,7 +35,7 @@ const convertStrMinToSec = (minutes: MaxAgeInMinutes): number => {
  */
 export const CacheControl = (
   scope: CacheScope = 'PRIVATE',
-  maxAge: MaxAgeInMinutes = '0m',
+  maxAge: MaxAge = MaxAge.NO_MAX_AGE,
 ): MethodDecorator => {
   return (
     _target: any,

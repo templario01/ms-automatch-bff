@@ -74,6 +74,7 @@ type PaginatedVehiclesEntity {
 type Query {
   getBrands(word: String!): [VehicleBrandEntity!]!
   getVehiclesByFilters(searchVehiclesInput: SearchVehiclesInput!): PaginatedVehiclesEntity!
+  getRecommendedVehicles: [VehicleEntity!]!
 }
 
 input SearchVehiclesInput {
@@ -81,9 +82,9 @@ input SearchVehiclesInput {
   after: String
   brand: String!
   model: String!
-  location: String!
+  location: String
   minPrice: Float
   maxPrice: Float
-  year: Float!
+  year: Float
   condition: VehicleCondition
 }

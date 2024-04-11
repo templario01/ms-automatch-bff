@@ -5,9 +5,10 @@ import { AutomatchHttpModule } from '../common/http/automatch-http.module';
 import { EnvConfigModule } from '../settings/config/env-config.module';
 import { VehicleService } from './services/vehicle.service';
 import { VehicleResolver } from './resolvers/vehicle.resolver';
+import { RedisModule } from '../settings/redis/redis.module';
 
 @Module({
-  imports: [AutomatchHttpModule, EnvConfigModule],
+  imports: [AutomatchHttpModule, EnvConfigModule, RedisModule],
   providers: [
     VehicleBrandService,
     VehicleBrandResolver,
