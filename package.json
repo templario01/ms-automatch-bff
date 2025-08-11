@@ -25,7 +25,7 @@
   "dependencies": {
     "@apollo/server-plugin-response-cache": "^4.1.4",
     "@apollo/utils.keyvadapter": "^4.0.0",
-    "@as-integrations/fastify": "^2.1.1",
+    "@as-integrations/fastify": "^3.0.0",
     "@keyv/compress-gzip": "^2.0.0",
     "@keyv/redis": "^5.0.0",
     "@nestjs/apollo": "^12.2.2",
