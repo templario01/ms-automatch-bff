@@ -3,14 +3,15 @@ import { Injectable } from '@nestjs/common';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { EnvConfigService } from '../config/env-config.service';
 import { RedisClient } from '../redis/redis.client';
+import { ApolloServerPluginCacheControl } from '@apollo/server/plugin/cacheControl';
+import { createHash } from 'crypto';
+import { ApolloServerPlugin, GraphQLRequestContext } from '@apollo/server';
 import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default';
-import { ApolloServerPlugin, type GraphQLRequestContext } from '@apollo/server';
-import { ApolloServerPluginCacheControl } from '@apollo/server/plugin/cacheControl';
+import {} from '@apollo/server/plugin/cacheControl';
 import responseCachePlugin from '@apollo/server-plugin-response-cache';
-import { createHash } from 'crypto';
 
 @Injectable()
 export class GraphqlOptions implements GqlOptionsFactory {
@@ -30,10 +31,7 @@ export class GraphqlOptions implements GqlOptionsFactory {
       playground: false,
       introspection: this.envConfig.app.environment !== 'production',
       autoSchemaFile: 'tmp/schema.gql',
-      persistedQueries: {
-        cache: this.redisClient.adapter,
-        ttl: 60,
-      },
+      persistedQueries: { cache: this.redisClient.adapter, ttl: 60 },
       context: (context) => context,
       plugins: [...this.apolloGqlPlugins],
     };
@@ -50,17 +48,13 @@ export class GraphqlOptions implements GqlOptionsFactory {
 
   private get apolloExplorerSandboxPlugin(): ApolloServerPlugin {
     if (this.environment === 'production') {
-      return ApolloServerPluginLandingPageProductionDefault({
-        footer: false,
-      });
+      return ApolloServerPluginLandingPageProductionDefault({ footer: false });
     }
     return ApolloServerPluginLandingPageLocalDefault({ footer: false });
   }
 
   private get apolloCacheControlMaxAgePlugin(): ApolloServerPlugin {
-    return ApolloServerPluginCacheControl({
-      defaultMaxAge: 0,
-    });
+    return ApolloServerPluginCacheControl({ defaultMaxAge: 0 });
   }
 
   private get apolloCacheControlPlugin(): ApolloServerPlugin {

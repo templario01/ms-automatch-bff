@@ -21,4 +21,9 @@ export class EnvConfigService {
       url: this.configService.get<string>('INVENTORY_API_URL'),
     };
   }
+  get account() {
+    return {
+      url: this.configService.get<string>('ACCOUNT_API_URL'),
+    };
+  }
 }

@@ -71,10 +71,17 @@ type PaginatedVehiclesEntity {
   endCursor: String
 }
 
+type AccountEntity {
+  id: ID!
+  hasActiveNotifications: Boolean!
+  favoriteVehicles: [VehicleEntity!]
+}
+
 type Query {
   getBrands(word: String!): [VehicleBrandEntity!]!
   getVehiclesByFilters(searchVehiclesInput: SearchVehiclesInput!): PaginatedVehiclesEntity!
   getRecommendedVehicles: [VehicleEntity!]!
+  account: AccountEntity!
 }
 
 input SearchVehiclesInput {
