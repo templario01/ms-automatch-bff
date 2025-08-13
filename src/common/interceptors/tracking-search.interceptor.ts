@@ -9,7 +9,7 @@ import { EMPTY, Observable, from } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { RedisClient } from '../../settings/redis/redis.client';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { SearchVehiclesInput } from '../../vehicles/graphql-types/inputs/search-vehicles.input';
+import { SearchVehiclesInput } from '../../vehicle/graphql-types/inputs/search-vehicles.input';
 
 @Injectable()
 export class TrackingSearchInterceptor implements NestInterceptor {

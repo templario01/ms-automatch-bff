@@ -8,6 +8,8 @@ import {
 import { Observable, catchError, tap } from 'rxjs';
 import { ApiErrorException } from '../exceptions/api-error.exception';
 
+const successStatusCodes = [200, 201, 204];
+
 @Injectable()
 export class AutomatchHttpService {
   private readonly logger = new Logger(AutomatchHttpService.name);
@@ -50,7 +52,7 @@ export class AutomatchHttpService {
   ): Observable<AxiosResponse<T>> {
     return this.httpService.request(requestConfig).pipe(
       tap((response) => {
-        if (!response.data) {
+        if (!response.data && !successStatusCodes.includes(response.status)) {
           throw new ApiErrorException('data response empty');
         }
       }),

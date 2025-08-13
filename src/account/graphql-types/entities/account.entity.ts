@@ -1,5 +1,5 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
-import { VehicleEntity } from 'src/vehicles/graphql-types/entities/vehicle.entity';
+import { VehicleEntity } from 'src/vehicle/graphql-types/entities/vehicle.entity';
 import { plainToInstance } from 'class-transformer';
 import { AccountDto } from '../../dtos/account.dto';
 

@@ -9,7 +9,7 @@ import { GraphqlOptions } from './settings/graphql/graphql-options.factory';
 import { RedisModule } from './settings/redis/redis.module';
 import { EnvConfigService } from './settings/config/env-config.service';
 import { RedisClient } from './settings/redis/redis.client';
-import { VehiclesModule } from './vehicles/vehicles.module';
+import { VehiclesModule } from './vehicle/vehicles.module';
 import { AccountModule } from './account/account.module';
 
 @Module({

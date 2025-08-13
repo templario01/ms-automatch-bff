@@ -95,3 +95,8 @@ input SearchVehiclesInput {
   year: Float
   condition: VehicleCondition
 }
+
+type Mutation {
+  addFavoriteVehicle(vehicleId: String!): VehicleEntity!
+  removeFavoriteVehicle(vehicleId: String!): VehicleEntity!
+}
