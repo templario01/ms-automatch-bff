@@ -10,6 +10,7 @@ import { RedisModule } from './settings/redis/redis.module';
 import { EnvConfigService } from './settings/config/env-config.service';
 import { RedisClient } from './settings/redis/redis.client';
 import { VehiclesModule } from './vehicles/vehicles.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { VehiclesModule } from './vehicles/vehicles.module';
       useClass: GraphqlOptions,
     }),
     VehiclesModule,
+    AccountModule,
   ],
   controllers: [],
   providers: [],

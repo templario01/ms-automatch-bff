@@ -1,5 +1,5 @@
 import { Args, Info, Query, Resolver } from '@nestjs/graphql';
-import { CacheControl, MaxAge } from '../../common/decorators/cahche-control';
+import { CacheControl, MaxAge } from '../../common/decorators/cache-control';
 import { Observable } from 'rxjs';
 import { PaginatedVehiclesEntity } from '../graphql-types/entities/paginated-vehicles.entity';
 import { VehicleEntity } from '../graphql-types/entities/vehicle.entity';
