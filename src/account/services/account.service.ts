@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Observable, map } from 'rxjs';
-import { AccountEntity } from '../entities/account.entity';
 import { AutomatchHttpService } from '../../common/http/automatch-http.service';
+import { AccountEntity } from '../graphql-types/entities/account.entity';
+import { AccountDto } from '../dtos/account.dto';
+import { EnvConfigService } from '../../settings/config/env-config.service';
 
 @Injectable()
 export class AccountService {
+  private apiUrl: string;
   constructor(
     private readonly httpService: AutomatchHttpService,
-    private readonly configService: ConfigService,
-  ) {}
+    private readonly envConfigService: EnvConfigService,
+  ) {
+    this.apiUrl = this.envConfigService.account.url;
+  }
 
   getAccount(token: string): Observable<AccountEntity> {
-    const url = `${this.configService.get('ACCOUNT_SERVICE_URL')}/v1/account`;
-
+    const url = `${this.apiUrl}/account`;
     return this.httpService
-      .get<AccountEntity>(url, {
+      .get<AccountDto>(url, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       })
-      .pipe(map((response) => response.data));
+      .pipe(map(({ data }) => AccountEntity.mapToEntity(data)));
   }
 }

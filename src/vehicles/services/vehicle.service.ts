@@ -60,6 +60,20 @@ export class VehicleService {
     );
   }
 
+  public findVehiclesByIds(ids: string[]): Observable<VehicleEntity[]> {
+    return this.httpService
+      .get<VehicleDto[]>(`${this.apiUrl}/inventory/group`, {
+        params: {
+          ids: ids.join(','),
+        },
+      })
+      .pipe(
+        map(({ data }) => {
+          return VehicleEntity.mapToEntities(data);
+        }),
+      );
+  }
+
   private getAllSearches(): Observable<UserSearch[]> {
     const key = Buffer.from('getVehiclesByFilters').toString('base64');
     return from(this.redisClient.adapter.get(key)).pipe(
