@@ -17,3 +17,6 @@ tag:
 # Hacer push de la imagen a Docker Hub
 push:
 	docker push $(IMAGE_NAME):$(TAG)
+
+expose:
+	ngrok http --host-header=localhost 80 

@@ -58,6 +58,12 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+# Kubernetes commands
+
+kubectl logs pod/ms-automatch-bff-deploy-5f7fc69c7-r45dz -n automatch
+kubectl delete pod -n automatch -l app=ms-automatch-bff
+kubectl get pods,svc,ing -n automatch
+
 # Renovate App
 
 https://developer.mend.io/

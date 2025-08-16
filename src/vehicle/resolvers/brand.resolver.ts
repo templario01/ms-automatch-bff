@@ -3,16 +3,17 @@ import { VehicleBrandEntity } from '../graphql-types/entities/vehicle-brand.enti
 import { CacheControl, MaxAge } from '../../common/decorators/cache-control';
 import { Observable } from 'rxjs';
 import { VehicleBrandService } from '../services/brand.service';
+import { GetBrandsArgs } from '../graphql-types/inputs/get-grands.args';
 
 @Resolver(() => VehicleBrandEntity)
 export class VehicleBrandResolver {
   constructor(private readonly vehicleBrandService: VehicleBrandService) {}
   @Query(() => [VehicleBrandEntity])
   @CacheControl('PUBLIC', MaxAge.TEN_MINUTES)
-  getBrands(
+  brands(
     @Info() _info: ParameterDecorator,
-    @Args('word') word: string,
+    @Args() args: GetBrandsArgs,
   ): Observable<VehicleBrandEntity[]> {
-    return this.vehicleBrandService.getBrands(word);
+    return this.vehicleBrandService.getBrands(args.word);
   }
 }

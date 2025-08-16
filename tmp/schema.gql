@@ -78,8 +78,8 @@ type AccountEntity {
 }
 
 type Query {
-  getBrands(word: String!): [VehicleBrandEntity!]!
-  getVehiclesByFilters(searchVehiclesInput: SearchVehiclesInput!): PaginatedVehiclesEntity!
+  brands(word: String!): [VehicleBrandEntity!]!
+  vehicles(searchVehiclesInput: SearchVehiclesInput!): PaginatedVehiclesEntity!
   getRecommendedVehicles: [VehicleEntity!]!
   account: AccountEntity!
 }
@@ -92,7 +92,8 @@ input SearchVehiclesInput {
   location: String
   minPrice: Float
   maxPrice: Float
-  year: Float
+  minYear: Float
+  maxYear: Float
   condition: VehicleCondition
 }
 

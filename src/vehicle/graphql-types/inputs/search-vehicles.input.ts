@@ -45,8 +45,14 @@ export class SearchVehiclesInput extends CursorPaginatorInput {
   @Field({ nullable: true })
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  readonly year?: number;
+  @Min(1900)
+  readonly minYear?: number;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(1999)
+  readonly maxYear?: number;
 
   @Field(() => VehicleCondition, { nullable: true })
   @IsOptional()

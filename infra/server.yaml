@@ -82,33 +82,3 @@ spec:
       targetPort: 3000
       protocol: TCP
   type: ClusterIP #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress-control
-  namespace: automatch
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: localhost
-      http:
-        paths:
-          - path: /ms-automatch-bff
-            pathType: Prefix
-            backend:
-              service:
-                name: "ms-automatch-bff-svc"
-                port:
-                  number: 80
-          - path: /ms-automatch-core-bs
-            pathType: Prefix
-            backend:
-              service:
-                name: "ms-automatch-core-bs-svc"
-                port:
-                  number: 80
-
-  
-

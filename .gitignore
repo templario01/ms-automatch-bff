@@ -1,7 +1,6 @@
 # compiled output
 /dist
 /node_modules
-/infra
 
 # Logs
 logs
@@ -37,4 +36,4 @@ lerna-debug.log*
 
 .env
 
-/tmp
+/infra

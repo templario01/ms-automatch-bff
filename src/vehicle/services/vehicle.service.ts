@@ -94,17 +94,17 @@ export class VehicleService {
         searchesByKey[key] = {
           brand: search.brand,
           model: search.model,
-          minYear: search.year,
-          maxYear: search.year,
+          minYear: search.minYear,
+          maxYear: search.maxYear,
         };
       } else {
         searchesByKey[key].minYear = Math.min(
           searchesByKey[key].minYear,
-          search.year,
+          search.minYear,
         );
         searchesByKey[key].maxYear = Math.max(
           searchesByKey[key].maxYear,
-          search.year,
+          search.maxYear,
         );
       }
     });

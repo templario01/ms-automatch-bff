@@ -5,17 +5,16 @@ import { PaginatedVehiclesEntity } from '../graphql-types/entities/paginated-veh
 import { VehicleEntity } from '../graphql-types/entities/vehicle.entity';
 import { SearchVehiclesInput } from '../graphql-types/inputs/search-vehicles.input';
 import { VehicleService } from '../services/vehicle.service';
-import { TrackingSearchInterceptor } from '../../common/interceptors/tracking-search.interceptor';
-import { UseInterceptors } from '@nestjs/common';
+/* import { TrackingSearchInterceptor } from '../../common/interceptors/tracking-search.interceptor';
+import { UseInterceptors } from '@nestjs/common'; */
 
 @Resolver(() => VehicleEntity)
 export class VehicleResolver {
   constructor(private readonly vehicleService: VehicleService) {}
 
-  @UseInterceptors(TrackingSearchInterceptor)
   @Query(() => PaginatedVehiclesEntity)
   @CacheControl('PUBLIC', MaxAge.ONE_MINUTE)
-  getVehiclesByFilters(
+  vehicles(
     @Info() _info: ParameterDecorator,
     @Args('searchVehiclesInput') searchVehiclesInput: SearchVehiclesInput,
   ): Observable<PaginatedVehiclesEntity> {
