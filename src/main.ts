@@ -12,6 +12,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+  app.setGlobalPrefix('ms-automatch-bff');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

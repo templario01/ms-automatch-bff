@@ -2,19 +2,20 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: automatch-bff-configmap
+  name: ms-automatch-bff-configmap
   namespace: automatch
 data:
-  NODE_ENV: "qa"
-  PORT: "3020"
-  INVENTORY_API_URL: "http://automatch-inventory-bs-svc/v1"
-  REDIS_URL: "rediss://:6357ed466025411d8cceb0d5d6b6c786@us1-perfect-hyena-42231.upstash.io:42231"
+  NODE_ENV: "production"
+  PORT: "3000"
+  INVENTORY_API_URL: "http://ms-automatch-inventory-bs-svc/v1"
+  ACCOUNT_API_URL: "http://ms-automatch-core-bs-svc/v1"
+  REDIS_URL: ""
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: automatch-bff-deploy
+  name: ms-automatch-bff-deploy
   namespace: automatch
 spec:
   replicas: 1
@@ -29,31 +30,36 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: ms-automatch-bff
-          image: victor0141/ms-automatch-bff:1.4
+          image: victor0141/ms-automatch-bff:1.5
           imagePullPolicy: Always
           env:
             - name: NODE_ENV
               valueFrom:
                 configMapKeyRef:
-                  name: automatch-bff-configmap
+                  name: ms-automatch-bff-configmap
                   key: NODE_ENV
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                  name: automatch-bff-configmap
+                  name: ms-automatch-bff-configmap
                   key: PORT
             - name: INVENTORY_API_URL
               valueFrom:
                 configMapKeyRef:
-                  name: automatch-bff-configmap
+                  name: ms-automatch-bff-configmap
                   key: INVENTORY_API_URL
+            - name: ACCOUNT_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ms-automatch-bff-configmap
+                  key: ACCOUNT_API_URL
             - name: REDIS_URL
               valueFrom:
                 configMapKeyRef:
-                  name: automatch-bff-configmap
+                  name: ms-automatch-bff-configmap
                   key: REDIS_URL
           ports:
-            - containerPort: 3020
+            - containerPort: 3000
           resources:
             requests:
               memory: "128Mi"
@@ -66,14 +72,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: automatch-bff-svc
+  name: ms-automatch-bff-svc
   namespace: automatch
 spec:
   selector:
     app: ms-automatch-bff
   ports:
     - port: 80
-      targetPort: 3020
+      targetPort: 3000
       protocol: TCP
   type: ClusterIP #[ClusterIP]Expose node for internal k8 comunication, [LoadBalancer]Expose node for external comunication
 
@@ -89,11 +95,18 @@ spec:
     - host: localhost
       http:
         paths:
-          - path: /
+          - path: /ms-automatch-bff
             pathType: Prefix
             backend:
               service:
-                name: "automatch-bff-svc"
+                name: "ms-automatch-bff-svc"
+                port:
+                  number: 80
+          - path: /ms-automatch-core-bs
+            pathType: Prefix
+            backend:
+              service:
+                name: "ms-automatch-core-bs-svc"
                 port:
                   number: 80
 
